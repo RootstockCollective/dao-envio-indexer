@@ -9,7 +9,7 @@ rollback_on_reorg: true
 
 contracts:
   - name: Governor
-    abi: ./abis/Governor.json
+    abi_file_path: ./abis/Governor.json
     handler: src/EventHandlers.ts
     events:
       # Proposal lifecycle events
@@ -24,6 +24,8 @@ contracts:
 networks:
   - id: ${ENVIO_CHAIN_ID}
     start_block: ${ENVIO_START_BLOCK}
+    rpc_config:
+      url: ${ENVIO_RPC_URL}
     contracts:
       - name: Governor
         address: ${ENVIO_GOVERNOR_ADDRESS}

@@ -10,7 +10,8 @@
     "test": "vitest"
   },
   "dependencies": {
-    "envio": "^2.27.0"
+    "envio": "^2.27.0",
+    "viem": "^2.21.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

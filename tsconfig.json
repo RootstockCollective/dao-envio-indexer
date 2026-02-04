@@ -27,16 +27,14 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
 
-    // Output
-    "declaration": true,
-    "declarationMap": true,
+    // Output (no declaration files - this is an app, not a library)
     "sourceMap": true,
     "outDir": "./dist",
 
     // Paths
     "baseUrl": ".",
     "paths": {
-      "generated": ["./generated/src"]
+      "generated": ["./generated"]
     }
   },
   "include": ["src/**/*", "generated/**/*"],

@@ -2,6 +2,25 @@
 
 Envio indexer for DAO ecosystem data. Indexes on-chain events and exposes them via GraphQL API.
 
+## Quick Start (TL;DR)
+
+```bash
+# 1. Get a free RPC API key from https://rpc.rootstock.io/
+
+# 2. Setup
+pnpm install
+cp .env.example .env.dev
+
+# 3. Edit .env.dev - update ENVIO_RPC_URL with your API key:
+#    ENVIO_RPC_URL=https://rpc.testnet.rootstock.io/<YOUR_API_KEY>
+
+# 4. Run (Docker must be running)
+export $(grep -v '^#' .env.dev | xargs) && pnpm dev
+
+# 5. Open GraphQL Playground: http://localhost:8080
+#    Password: testing
+```
+
 ## Overview
 
 Envio-based indexer for the DAO ecosystem. Currently indexes governance data from the Governor contract, with architecture designed to support additional data sources (staking, vault history, rewards, etc.) through configuration.
@@ -16,7 +35,9 @@ Envio-based indexer for the DAO ecosystem. Currently indexes governance data fro
 
 - Node.js >= 22.0.0
 - pnpm >= 9.15.0
-- Docker (for local development)
+- Docker Desktop (must be running)
+- **Rootstock RPC API Key** (free) - get one at https://rpc.rootstock.io/
+  - Required because the public node (`public-node.testnet.rsk.co`) doesn't support `eth_getLogs`
 
 ## Setup
 
@@ -30,29 +51,87 @@ pnpm install
 
 ```bash
 cp .env.example .env.dev
-# Edit .env.dev with your values
 ```
 
-3. **Generate types:**
+3. **Get RPC API Key** (required):
+   - Go to https://rpc.rootstock.io/
+   - Sign up / Log in with GitHub
+   - Create API key for **Testnet**
+   - Update `.env.dev`:
+     ```
+     ENVIO_RPC_URL=https://rpc.testnet.rootstock.io/<YOUR_API_KEY>
+     ```
+
+4. **Run locally** (Docker must be running):
 
 ```bash
-source .env.dev && pnpm codegen
+export $(grep -v '^#' .env.dev | xargs) && pnpm dev
 ```
 
-4. **Run locally:**
+5. **Access GraphQL Playground**: http://localhost:8080
+   - Admin password: `testing`
 
-```bash
-source .env.dev && pnpm dev
-```
+> **Note:** The `export $(grep ...)` pattern filters out comments and exports variables to the shell.
 
 ## Environment Configuration
 
-| Variable                 | Description                     | Example                                      |
-| ------------------------ | ------------------------------- | -------------------------------------------- |
-| `ENVIO_CHAIN_ID`         | Chain ID                        | `31` (Rootstock Testnet)                     |
-| `ENVIO_START_BLOCK`      | Block to start indexing from    | `5784028`                                    |
-| `ENVIO_GOVERNOR_ADDRESS` | Governor contract address       | `0xB1A39B8f57A55d1429324EEb1564122806eb297F` |
-| `ENVIO_RPC_URL`          | RPC endpoint for contract reads | `https://public-node.testnet.rsk.co`         |
+| Variable                 | Description                    | Example                                           |
+| ------------------------ | ------------------------------ | ------------------------------------------------- |
+| `ENVIO_CHAIN_ID`         | Chain ID                       | `31` (Rootstock Testnet)                          |
+| `ENVIO_START_BLOCK`      | Block to start indexing from   | `7290000` (recent) or `5784028` (all history)     |
+| `ENVIO_GOVERNOR_ADDRESS` | Governor contract address      | `0xB1A39B8f57A55d1429324EEb1564122806eb297F`      |
+| `ENVIO_RPC_URL`          | RPC endpoint (with API key)    | `https://rpc.testnet.rootstock.io/<YOUR_API_KEY>` |
+| `ENVIO_API_TOKEN`        | HyperSync API token (optional) | `your-api-token`                                  |
+
+> **Tip:** Use a recent `ENVIO_START_BLOCK` (e.g., last week) for fast initial sync during development. Use the contract deployment block for production.
+
+## Data Source: RPC vs HyperSync
+
+The indexer supports two data sources:
+
+- **RPC Mode** (default): Uses standard RPC endpoint. Works on all chains but slower sync.
+- **HyperSync Mode**: Uses Envio's HyperSync for up to 2000x faster syncing.
+
+### Current Status
+
+| Chain             | Chain ID | HyperSync Support |
+| ----------------- | -------- | ----------------- |
+| Rootstock Mainnet | 30       | Yes               |
+| Rootstock Testnet | 31       | Pending           |
+
+### Switching to HyperSync
+
+When HyperSync becomes available for your chain:
+
+1. **Get an API token** at https://envio.dev/app/api-tokens
+
+2. **Add token to your `.env` file:**
+
+```bash
+ENVIO_API_TOKEN=your-api-token-here
+```
+
+3. **Update `config.yaml`** - comment out `rpc_config` and uncomment `hypersync_config`:
+
+```yaml
+networks:
+  - id: ${ENVIO_CHAIN_ID}
+    start_block: ${ENVIO_START_BLOCK}
+    # HyperSync (uncomment when available)
+    hypersync_config:
+      url: https://${ENVIO_CHAIN_ID}.hypersync.xyz
+      bearer_token: ${ENVIO_API_TOKEN}
+    # RPC fallback (comment out when using HyperSync)
+    # rpc_config:
+    #   url: ${ENVIO_RPC_URL}
+```
+
+4. **Restart the indexer:**
+
+```bash
+pnpm envio stop
+export $(grep -v '^#' .env.dev | xargs) && pnpm dev
+```
 
 ## Adding a New Environment
 
@@ -68,13 +147,14 @@ cp .env.example .env.mainnet
 ENVIO_CHAIN_ID=30
 ENVIO_START_BLOCK=<deployment_block>
 ENVIO_GOVERNOR_ADDRESS=<mainnet_governor_address>
-ENVIO_RPC_URL=https://public-node.rsk.co
+# For mainnet, HyperSync is available - no RPC needed
+# Or use: ENVIO_RPC_URL=https://rpc.mainnet.rootstock.io/<YOUR_API_KEY>
 ```
 
 3. Run with new environment:
 
 ```bash
-source .env.mainnet && pnpm dev
+export $(grep -v '^#' .env.mainnet | xargs) && pnpm dev
 ```
 
 ## GraphQL API
@@ -213,6 +293,24 @@ dao-envio-indexer/
 ├── package.json
 └── tsconfig.json
 ```
+
+## Troubleshooting
+
+### Sync is very slow
+
+- Use a recent `ENVIO_START_BLOCK` for faster testing
+- When HyperSync becomes available for Rootstock Testnet, switch to it (2000x faster)
+
+### No proposals showing
+
+Check your `ENVIO_START_BLOCK` - proposals created before that block won't be indexed. Lower it to include more history.
+
+### Testing with Frontend
+
+1. Keep indexer running (`pnpm dev`)
+2. In `dao-frontend/.env.dev`, ensure: `ENVIO_GRAPHQL_URL=http://localhost:8080/v1/graphql`
+3. Run frontend: `pnpm dev`
+4. Check response header `X-Source: source-0` to confirm Envio is being used
 
 ## License
 

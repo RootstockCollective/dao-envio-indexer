@@ -24,6 +24,8 @@ contracts:
 networks:
   - id: ${ENVIO_CHAIN_ID}
     start_block: ${ENVIO_START_BLOCK}
+    # Data source: RPC (default) or HyperSync (when available)
+    # See README.md for instructions on switching to HyperSync
     rpc_config:
       url: ${ENVIO_RPC_URL}
     contracts:

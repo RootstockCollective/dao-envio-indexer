@@ -6,7 +6,7 @@
  *
  */
 
-import { Governor, Proposal, Vote } from 'generated'
+import { Governor, Proposal, Vote } from '../generated'
 import { getQuorum } from './effects/quorumEffect'
 
 // =============================================================================
@@ -76,7 +76,9 @@ Governor.VoteCast.handler(async ({ event, context }) => {
     votesAgainst:
       supportNum === 0 ? proposal.votesAgainst + weight : proposal.votesAgainst,
     votesAbstains:
-      supportNum === 2 ? proposal.votesAbstains + weight : proposal.votesAbstains,
+      supportNum === 2
+        ? proposal.votesAbstains + weight
+        : proposal.votesAbstains,
   }
 
   context.Proposal.set(updatedProposal)
@@ -121,7 +123,9 @@ Governor.VoteCastWithParams.handler(async ({ event, context }) => {
     votesAgainst:
       supportNum === 0 ? proposal.votesAgainst + weight : proposal.votesAgainst,
     votesAbstains:
-      supportNum === 2 ? proposal.votesAbstains + weight : proposal.votesAbstains,
+      supportNum === 2
+        ? proposal.votesAbstains + weight
+        : proposal.votesAbstains,
   }
 
   context.Proposal.set(updatedProposal)

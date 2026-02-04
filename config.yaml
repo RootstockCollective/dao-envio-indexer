@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=./node_modules/envio/evm.schema.json
+name: dao-envio-indexer
+description: Envio indexer for DAO governance data
+
+# Performance optimizations
+unordered_multichain_mode: true
+preload_handlers: true
+rollback_on_reorg: true
+
+contracts:
+  - name: Governor
+    abi: ./abis/Governor.json
+    handler: src/EventHandlers.ts
+    events:
+      # Proposal lifecycle events
+      - event: 'ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 voteStart, uint256 voteEnd, string description)'
+      - event: 'ProposalCanceled(uint256 proposalId)'
+      - event: 'ProposalExecuted(uint256 proposalId)'
+      - event: 'ProposalQueued(uint256 proposalId, uint256 etaSeconds)'
+      # Voting events
+      - event: 'VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)'
+      - event: 'VoteCastWithParams(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason, bytes params)'
+
+networks:
+  - id: ${ENVIO_CHAIN_ID}
+    start_block: ${ENVIO_START_BLOCK}
+    contracts:
+      - name: Governor
+        address: ${ENVIO_GOVERNOR_ADDRESS}

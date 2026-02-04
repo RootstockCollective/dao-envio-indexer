@@ -1,0 +1,56 @@
+# DAO Governance Indexer Schema
+# Compatible with dao-frontend ProposalApiResponse interface
+
+type Proposal @entity {
+  # Unique identifier (proposalId as string)
+  id: ID!
+
+  # Core proposal data from ProposalCreated event
+  proposalId: BigInt! @index
+  proposer: String!
+  description: String!
+  targets: [String!]!
+  calldatas: [String!]!
+  signatures: [String!]!
+  values: [BigInt!]!
+
+  # Voting period
+  voteStart: BigInt!
+  voteEnd: BigInt!
+
+  # Block and timestamp info
+  createdAtBlock: BigInt!
+  createdAt: BigInt! @index
+
+  # Vote aggregation (updated by VoteCast events)
+  votesFor: BigInt!
+  votesAgainst: BigInt!
+  votesAbstains: BigInt!
+
+  # Quorum at snapshot block (fetched via contract read)
+  quorum: BigInt!
+
+  # Terminal state flags (updated by respective events)
+  isCanceled: Boolean!
+  isExecuted: Boolean!
+  isQueued: Boolean!
+
+  # Queue ETA (set by ProposalQueued event)
+  etaSeconds: BigInt
+}
+
+# Individual vote records for detailed vote history
+type Vote @entity {
+  # Unique identifier: {proposalId}-{voter}-{logIndex}
+  id: ID!
+
+  proposalId: BigInt! @index
+  voter: String! @index
+  support: Int! # 0 = Against, 1 = For, 2 = Abstain
+  weight: BigInt!
+  reason: String!
+
+  # Block info
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}

@@ -1,0 +1,24 @@
+{
+  "name": "dao-envio-indexer",
+  "version": "0.0.1",
+  "description": "Envio indexer for DAO governance data",
+  "private": true,
+  "scripts": {
+    "codegen": "envio codegen",
+    "dev": "envio dev",
+    "start": "envio start",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "envio": "^2.27.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

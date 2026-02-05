@@ -5,20 +5,22 @@ Envio indexer for DAO ecosystem data. Indexes on-chain events and exposes them v
 ## Quick Start (TL;DR)
 
 ```bash
-# 1. Get a free RPC API key from https://rpc.rootstock.io/
-
-# 2. Setup
+# 1. Setup
 pnpm install
-cp .env.example .env.dev
 
-# 3. Edit .env.dev - update ENVIO_RPC_URL with your API key:
-#    ENVIO_RPC_URL=https://rpc.testnet.rootstock.io/<YOUR_API_KEY>
+# 2. Run with MAINNET (uses HyperSync - fast!)
+export $(grep -v '^#' .env.mainnet | xargs) && pnpm dev
 
-# 4. Run (Docker must be running)
-export $(grep -v '^#' .env.dev | xargs) && pnpm dev
-
-# 5. Open GraphQL Playground: http://localhost:8080
+# 3. Open GraphQL Playground: http://localhost:8080
 #    Password: testing
+```
+
+### For Testnet (requires RPC API key)
+
+```bash
+# 1. Get a free RPC API key from https://rpc.rootstock.io/
+# 2. Edit .env.dev - update ENVIO_RPC_URL with your API key
+# 3. Run: export $(grep -v '^#' .env.dev | xargs) && pnpm dev
 ```
 
 ## Overview

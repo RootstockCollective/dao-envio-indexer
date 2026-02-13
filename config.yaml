@@ -24,10 +24,9 @@ contracts:
 networks:
   - id: ${ENVIO_CHAIN_ID}
     start_block: ${ENVIO_START_BLOCK}
-    # HyperSync for fast indexing (2000x faster than RPC)
-    # Rootstock Mainnet (chain 30) supports HyperSync
-    hypersync_config:
-      url: https://rsk.hypersync.xyz
+    # RPC configuration for Rootstock Testnet (HyperSync not yet available)
+    rpc_config:
+      url: ${ENVIO_RPC_URL}
     contracts:
       - name: Governor
         address: ${ENVIO_GOVERNOR_ADDRESS}

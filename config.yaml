@@ -22,11 +22,11 @@ contracts:
       - event: 'VoteCastWithParams(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason, bytes params)'
 
 networks:
-  - id: ${ENVIO_CHAIN_ID}
-    start_block: ${ENVIO_START_BLOCK}
+  - id: 31  # Rootstock Testnet
+    start_block: 5784028
     # RPC configuration for Rootstock Testnet (HyperSync not yet available)
     rpc_config:
-      url: ${ENVIO_RPC_URL}
+      url: https://rpc.testnet.rootstock.io/COf4y0MCXuZkpMdRzwc6HL41MMMVkT-T
     contracts:
       - name: Governor
-        address: ${ENVIO_GOVERNOR_ADDRESS}
+        address: 0xB1A39B8f57A55d1429324EEb1564122806eb297F

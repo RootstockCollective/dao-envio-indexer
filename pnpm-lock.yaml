@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       envio:
-        specifier: ^2.27.0
+        specifier: ^2.32.3
         version: 2.32.3(typescript@5.9.3)
       viem:
         specifier: ^2.21.0

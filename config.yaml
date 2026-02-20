@@ -29,4 +29,4 @@ networks:
       url: https://rpc.testnet.rootstock.io/COf4y0MCXuZkpMdRzwc6HL41MMMVkT-T
     contracts:
       - name: Governor
-        address: 0xB1A39B8f57A55d1429324EEb1564122806eb297F
+        address: 0xb77ab0075e9805efa82040bed73368d988a2d9c2

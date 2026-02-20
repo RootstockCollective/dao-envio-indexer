@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./node_modules/envio/evm.schema.json
 name: dao-envio-indexer-rc-testnet
-description: DAO governance indexer for release-candidate testnet
+description: DAO governance indexer for release-candidate (Rootstock Testnet)
 
 # Performance optimizations
 unordered_multichain_mode: true

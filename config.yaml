@@ -27,10 +27,10 @@ networks:
     # RPC configuration for Rootstock Testnet (HyperSync not yet available)
     rpc_config:
       url: https://rpc.testnet.rootstock.io/5ICfBOXjGRKc0tpvMh7nvayFQZDDbr-T
-      initial_block_interval: 2000
-      interval_ceiling: 10000
+      initial_block_interval: 1999
+      interval_ceiling: 1999
       backoff_multiplicative: 0.8
-      acceleration_additive: 2000
+      acceleration_additive: 100
       backoff_millis: 5000
       query_timeout_millis: 20000
     contracts:

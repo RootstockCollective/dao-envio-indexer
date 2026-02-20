@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./node_modules/envio/evm.schema.json
-name: dao-envio-indexer-rc-testnet
-description: DAO governance indexer for release-candidate (Rootstock Testnet)
+name: dao-envio-indexer-dev
+description: DAO governance indexer for dev (Rootstock Testnet)
 
 # Performance optimizations
 unordered_multichain_mode: true
@@ -35,4 +35,4 @@ networks:
       query_timeout_millis: 20000
     contracts:
       - name: Governor
-        address: 0xb77ab0075e9805efa82040bed73368d988a2d9c2
+        address: 0xB1A39B8f57A55d1429324EEb1564122806eb297F

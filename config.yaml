@@ -26,7 +26,7 @@ networks:
     start_block: 5784028
     # RPC configuration for Rootstock Testnet (HyperSync not yet available)
     rpc_config:
-      url: https://rpc.testnet.rootstock.io/COf4y0MCXuZkpMdRzwc6HL41MMMVkT-T
+      url: https://public-node.testnet.rsk.co
     contracts:
       - name: Governor
         address: 0xb77ab0075e9805efa82040bed73368d988a2d9c2

@@ -27,6 +27,12 @@ networks:
     # RPC configuration for Rootstock Testnet (HyperSync not yet available)
     rpc_config:
       url: https://rpc.testnet.rootstock.io/bltlMxEbPCHzmW9gST9AEVR2Wa3HH2-T
+      initial_block_interval: 2000
+      interval_ceiling: 10000
+      backoff_multiplicative: 0.8
+      acceleration_additive: 2000
+      backoff_millis: 5000
+      query_timeout_millis: 20000
     contracts:
       - name: Governor
         address: 0xb77ab0075e9805efa82040bed73368d988a2d9c2

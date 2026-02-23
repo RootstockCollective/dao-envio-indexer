@@ -80,12 +80,12 @@ export $(grep -v '^#' .env.dev | xargs) && pnpm dev
 | Variable                 | Description                    | Example                                           |
 | ------------------------ | ------------------------------ | ------------------------------------------------- |
 | `ENVIO_CHAIN_ID`         | Chain ID                       | `31` (Rootstock Testnet)                          |
-| `ENVIO_START_BLOCK`      | Block to start indexing from   | `7290000` (recent) or `5784028` (all history)     |
+| `ENVIO_START_BLOCK`      | Block to start indexing from   | `7290000` (recent) or `5512037` (all history)     |
 | `ENVIO_GOVERNOR_ADDRESS` | Governor contract address      | `0xB1A39B8f57A55d1429324EEb1564122806eb297F`      |
 | `ENVIO_RPC_URL`          | RPC endpoint (with API key)    | `https://rpc.testnet.rootstock.io/<YOUR_API_KEY>` |
 | `ENVIO_API_TOKEN`        | HyperSync API token (optional) | `your-api-token`                                  |
 
-> **Tip:** Use a recent `ENVIO_START_BLOCK` (e.g., last week) for fast initial sync during development. Use the contract deployment block for production.
+> **Tip:** Use a recent `ENVIO_START_BLOCK` (e.g., last week) for fast initial sync during development. Use `5512037` for full proposal history.
 
 ## Data Source: RPC vs HyperSync
 
@@ -215,25 +215,36 @@ query GetProposals {
 
 ## Deployment
 
-### Envio Hosted Service
+### Hosted Deployments
 
-1. Install Envio CLI globally:
+Each environment runs as a separate Envio hosted indexer, deployed via a dedicated git branch. See [docs/deployment-architecture.md](docs/deployment-architecture.md) for the full rationale.
+
+| Branch | Indexer Name | Governor | Chain | Frontend Profile |
+|---|---|---|---|---|
+| `dev-index` | `dao-envio-indexer-dev` | `0xB1A39B8f...` | 31 (testnet) | dev |
+| `rc-testnet` | `dao-envio-indexer-rc-testnet` | `0xb77ab007...` | 31 (testnet) | release-candidate-testnet |
+
+### Deploying
+
+The Envio hosted service uses a git-based workflow (similar to Vercel). Pushing to a deployment branch triggers a redeploy automatically.
+
+1. **Create a deployment branch** (if new environment):
 
 ```bash
-npm install -g envio
+git checkout main && git checkout -b <branch-name>
 ```
 
-2. Login to Envio:
+2. **Update `config.yaml`** with environment-specific values (name, governor address, RPC key, start block).
+
+3. **Push to trigger deployment:**
 
 ```bash
-envio login
+git push origin <branch-name>
 ```
 
-3. Deploy:
+4. **Create the indexer** in the [Envio dashboard](https://envio.dev/app): connect the repo, set the deployment branch, and monitor via the Logs tab.
 
-```bash
-source .env.dev && envio deploy
-```
+> **Important:** Each deployment needs its own RPC API key (free at https://rpc.rootstock.io/) to avoid rate-limit contention. See [docs/deployment-architecture.md](docs/deployment-architecture.md) for details.
 
 ## Extending the Indexer
 
@@ -283,14 +294,16 @@ networks:
 dao-envio-indexer/
 ├── abis/                    # Contract ABIs
 │   └── Governor.json
+├── docs/
+│   └── deployment-architecture.md  # Deployment strategy & RPC constraints
 ├── src/
 │   ├── EventHandlers.ts     # Event handler implementations
 │   └── effects/
 │       └── quorumEffect.ts  # Effect API for RPC calls
 ├── generated/               # Auto-generated (do not edit)
-├── config.yaml              # Envio configuration
+├── config.yaml              # Envio configuration (template on main)
 ├── schema.graphql           # GraphQL schema
-├── .env.dev                 # DEV environment config
+├── .env.dev                 # DEV environment config (local only)
 ├── .env.example             # Environment template
 ├── package.json
 └── tsconfig.json
@@ -305,7 +318,7 @@ dao-envio-indexer/
 
 ### No proposals showing
 
-Check your `ENVIO_START_BLOCK` - proposals created before that block won't be indexed. Lower it to include more history.
+Check your `ENVIO_START_BLOCK` - proposals created before that block won't be indexed. Use `5512037` for full history.
 
 ### Testing with Frontend
 

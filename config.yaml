@@ -23,10 +23,17 @@ contracts:
 
 networks:
   - id: 31  # Rootstock Testnet
-    start_block: 5784028
-    # RPC configuration for Rootstock Testnet (HyperSync not yet available)
+    start_block: 5512037
     rpc_config:
-      url: https://rpc.testnet.rootstock.io/COf4y0MCXuZkpMdRzwc6HL41MMMVkT-T
+      url: https://rpc.testnet.rootstock.io/<YOUR_API_KEY>
+      # Rootstock RPC enforces a 2000-block limit on eth_getLogs.
+      # These settings keep every query under that cap.
+      initial_block_interval: 1999
+      interval_ceiling: 1999
+      backoff_multiplicative: 0.8
+      acceleration_additive: 100
+      backoff_millis: 5000
+      query_timeout_millis: 20000
     contracts:
       - name: Governor
         address: 0xB1A39B8f57A55d1429324EEb1564122806eb297F

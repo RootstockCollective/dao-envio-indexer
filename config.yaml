@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./node_modules/envio/evm.schema.json
-name: dao-envio-indexer
-description: Envio indexer for DAO governance data
+name: dao-envio-indexer-rc-testnet
+description: DAO governance indexer for release-candidate (Rootstock Testnet)
 
 # Performance optimizations
 unordered_multichain_mode: true
@@ -23,9 +23,9 @@ contracts:
 
 networks:
   - id: 31  # Rootstock Testnet
-    start_block: 5512037
+    start_block: 5784028
     rpc_config:
-      url: https://rpc.testnet.rootstock.io/<YOUR_API_KEY>
+      url: https://rpc.testnet.rootstock.io/5ICfBOXjGRKc0tpvMh7nvayFQZDDbr-T
       # Rootstock RPC enforces a 2000-block limit on eth_getLogs.
       # These settings keep every query under that cap.
       initial_block_interval: 1999
@@ -36,4 +36,4 @@ networks:
       query_timeout_millis: 20000
     contracts:
       - name: Governor
-        address: 0xB1A39B8f57A55d1429324EEb1564122806eb297F
+        address: 0xb77ab0075e9805efa82040bed73368d988a2d9c2

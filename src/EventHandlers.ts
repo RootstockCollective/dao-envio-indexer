@@ -9,6 +9,9 @@
 import { Governor, Proposal, Vote } from '../generated'
 import { getQuorum } from './effects/quorumEffect'
 
+// Registers block handler for sync progress (logs + SyncProgress entity)
+import './SyncProgressHandler'
+
 // =============================================================================
 // ProposalCreated Handler
 // =============================================================================

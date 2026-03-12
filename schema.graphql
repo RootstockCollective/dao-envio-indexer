@@ -39,6 +39,13 @@ type Proposal @entity {
   etaSeconds: BigInt
 }
 
+# Sync progress: last synced block per chain (updated by block handler)
+type SyncProgress @entity {
+  id: ID!
+  lastBlock: BigInt!
+  chainId: Int!
+}
+
 # Individual vote records for detailed vote history
 type Vote @entity {
   # Unique identifier: {proposalId}-{voter}-{logIndex}

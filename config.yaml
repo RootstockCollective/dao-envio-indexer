@@ -26,7 +26,7 @@ networks:
     # Proxy deployment block (first logs on this address); see creation tx 0x08e2c2c02e341b8fdf1fdbfd6106e4d42e9ace471f07ee088a9d3cac48be4140 on Rootstock Blockscout.
     start_block: 6704091
     hypersync_config:
-      url: https://rsk.hypersync.xyz
+      url: https://rootstock.hypersync.xyz
     contracts:
       - name: Governor
         address: 0x71ac6ff904a17f50f2c07b693376ccc1c92627f0

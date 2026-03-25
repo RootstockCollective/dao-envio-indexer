@@ -1,5 +1,27 @@
-import { readFileSync } from 'fs'
-import { join } from 'path'
+import { existsSync, readFileSync } from 'fs'
+import { dirname, join } from 'path'
+
+/**
+ * Finds config.yaml: hosted Envio often runs with cwd = .../generated, while the file
+ * lives at the indexer root next to /src.
+ */
+function resolveConfigPath(): string {
+  let dir = process.cwd()
+  for (let depth = 0; depth < 8; depth++) {
+    const candidate = join(dir, 'config.yaml')
+    if (existsSync(candidate)) {
+      return candidate
+    }
+    const parent = dirname(dir)
+    if (parent === dir) {
+      break
+    }
+    dir = parent
+  }
+  throw new Error(
+    `config.yaml not found (walked up from cwd ${process.cwd()})`,
+  )
+}
 
 /**
  * Reads the first `networks[].id` from config.yaml so handlers stay aligned with
@@ -7,8 +29,7 @@ import { join } from 'path'
  * break TypeScript after codegen (`chain` is a literal derived from the same id).
  */
 export function getConfiguredNetworkChainId(): number {
-  const configPath = join(process.cwd(), 'config.yaml')
-  const text = readFileSync(configPath, 'utf8')
+  const text = readFileSync(resolveConfigPath(), 'utf8')
   const i = text.indexOf('networks:')
   if (i === -1) {
     throw new Error('config.yaml: missing networks: block')

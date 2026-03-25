@@ -7,15 +7,21 @@
 
 import { createEffect, S } from "envio"
 import { createPublicClient, http, type Address } from "viem"
-import { rootstockTestnet } from "viem/chains"
+import { rootstock, rootstockTestnet } from "viem/chains"
 import GovernorAbi from "../../abis/Governor.json"
+import { getConfiguredNetworkChainId } from "../configChain"
 
-// RPC URL from environment (set in .env.dev)
-const RPC_URL = process.env["ENVIO_RPC_URL"] ?? "https://public-node.testnet.rsk.co"
+const configuredChainId = getConfiguredNetworkChainId()
+const viemChain = configuredChainId === 30 ? rootstock : rootstockTestnet
+const defaultRpc =
+  configuredChainId === 30
+    ? "https://public-node.rsk.co"
+    : "https://public-node.testnet.rsk.co"
 
-// Create viem client for RPC calls
+const RPC_URL = process.env["ENVIO_RPC_URL"] ?? defaultRpc
+
 const client = createPublicClient({
-  chain: rootstockTestnet,
+  chain: viemChain,
   transport: http(RPC_URL, { batch: true }),
 })
 
